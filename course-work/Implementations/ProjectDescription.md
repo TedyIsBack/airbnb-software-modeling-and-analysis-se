@@ -44,7 +44,7 @@
 - Framework: React 18 с JavaScript
 
 **Database**  
-- RDBMS: PostgreSQL 15  
+- RDBMS: MS SQL
 ---
 
 ### 4. Основни бизнес правила
