@@ -1,0 +1,99 @@
+
+CREATE TABLE [USER] (
+    ID INT IDENTITY(1,1),
+    Username NVARCHAR(100),
+    Email NVARCHAR(100),
+    Password NVARCHAR(100) NOT NULL,
+    Phone_Number NVARCHAR(20),
+    Date_Of_Birth DATE,
+    Created_At DATETIME DEFAULT GETDATE(),
+    CONSTRAINT PK_User PRIMARY KEY (ID),
+    CONSTRAINT NN01_User_Username CHECK (Username IS NOT NULL),
+    CONSTRAINT NN02_User_Email CHECK (Email IS NOT NULL),
+    CONSTRAINT UQ01_User_Email UNIQUE (Email),
+    CONSTRAINT NN03_User_Password CHECK (Password IS NOT NULL)
+);
+
+CREATE TABLE LOCATION (
+    ID INT IDENTITY(1,1),
+    Address NVARCHAR(255),
+    City NVARCHAR(30) NOT NULL,
+    Country_Code NVARCHAR(10) NOT NULL,
+    CONSTRAINT PK_Location PRIMARY KEY (ID),
+    CONSTRAINT NN01_Location_Address CHECK (Address IS NOT NULL),
+    CONSTRAINT NN02_Location_Ciy CHECK (City IS NOT NULL),
+    CONSTRAINT NN03_Location_CCode CHECK (Country_Code IS NOT NULL)
+);
+
+CREATE TABLE PROPERTY (
+    ID INT IDENTITY(1,1),
+    Name NVARCHAR(150) NOT NULL,
+    Description NVARCHAR(MAX),
+    Price DECIMAL(10,2) NOT NULL,
+    Location_ID INT NOT NULL,
+    CONSTRAINT PK_Property PRIMARY KEY (ID),
+    CONSTRAINT FK01_Property_Location FOREIGN KEY (Location_ID) REFERENCES LOCATION(ID),
+    CONSTRAINT NN01_Property_Name CHECK (Name IS NOT NULL),
+    CONSTRAINT NN02_Property_Price CHECK (Price > 0),
+    CONSTRAINT NN03_Property_Location CHECK (Location_ID IS NOT NULL)
+);
+
+CREATE TABLE AMENITY (
+    ID INT IDENTITY(1,1),
+    Name NVARCHAR(100) NOT NULL,
+    CONSTRAINT PK_Amenity PRIMARY KEY (ID),
+    CONSTRAINT NN01_Amenity_Name CHECK (Name IS NOT NULL)
+);
+
+CREATE TABLE PROPERTY_AMENITY (
+    Property_ID INT NOT NULL,
+    Amenity_ID INT NOT NULL,
+    CONSTRAINT PK_PropertyAmenity PRIMARY KEY (Property_ID, Amenity_ID),
+    CONSTRAINT FK01_PropertyAmenity_Property FOREIGN KEY (Property_ID) REFERENCES PROPERTY(ID) ON DELETE CASCADE,
+    CONSTRAINT FK02_PropertyAmenity_Amenity FOREIGN KEY (Amenity_ID) REFERENCES AMENITY(ID) ON DELETE CASCADE,
+    CONSTRAINT NN01_PropertyAmenity_Property CHECK (Property_ID IS NOT NULL),
+    CONSTRAINT NN02_PropertyAmenity_Amenity CHECK (Amenity_ID IS NOT NULL)
+);
+
+CREATE TABLE RESERVATION (
+    ID INT IDENTITY(1,1),
+    User_ID INT NOT NULL,
+    Property_ID INT NOT NULL,
+    Status NVARCHAR(20),
+    Amount DECIMAL(10,2) NOT NULL,
+    GuestsNumber INT NOT NULL,
+    Check_In_Time DATETIME NOT NULL,
+    Check_Out_Time DATETIME NOT NULL,
+    CONSTRAINT PK_Reservation PRIMARY KEY (ID),
+    CONSTRAINT FK01_Reservation_User FOREIGN KEY (User_ID) REFERENCES [USER](ID),
+    CONSTRAINT FK02_Reservation_Property FOREIGN KEY (Property_ID) REFERENCES PROPERTY(ID),
+    CONSTRAINT NN01_Reservation_User CHECK (User_ID IS NOT NULL),
+    CONSTRAINT NN02_Reservation_Property CHECK (Property_ID IS NOT NULL),
+    CONSTRAINT NN03_Reservation_Amount CHECK (Amount > 0),
+    CONSTRAINT NN04_Reservation_Guests CHECK (GuestsNumber > 0)
+);
+
+CREATE TABLE REVIEW (
+    ID INT IDENTITY(1,1),
+    User_ID INT,
+    Reservation_ID INT NOT NULL,
+    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    Content NVARCHAR(MAX),
+    CONSTRAINT PK_Review PRIMARY KEY (ID),
+    CONSTRAINT FK01_Review_User FOREIGN KEY (User_ID) REFERENCES [USER](ID),
+    CONSTRAINT FK02_Review_Reservation FOREIGN KEY (Reservation_ID) REFERENCES RESERVATION(ID),
+    CONSTRAINT NN01_Review_User CHECK (User_ID IS NOT NULL),
+    CONSTRAINT NN02_Review_Reservation CHECK (Reservation_ID IS NOT NULL)
+);
+
+CREATE TABLE PAYMENT(
+    ID INT IDENTITY(1,1),
+    Reservation_ID INT,
+    Amount DECIMAL(10,2),
+    Status VARCHAR(20),
+    TimeStamp DATETIME,
+    CONSTRAINT FK01_Payment_Reservation FOREIGN KEY (Reservation_ID) REFERENCES RESERVATION(ID),
+    CONSTRAINT NN01_Payment_Amount CHECK (Amount IS NOT NULL),
+    CONSTRAINT NN01_Payment_Status CHECK (Status IS NOT NULL),
+    CONSTRAINT NN01_Payment_TimeStamp CHECK (TimeStamp IS NOT NULL)
+)
