@@ -35,19 +35,9 @@
 
 ### 3. Технологичен стек
 
-<<<<<<< HEAD:course-work/Implementations/ProjectDescription.md.txt
 *   **Сървърна част (Backend):** Ruby - RoR framework (подходящо за startup проекти и позволява създаване на уеб приложения с голям трафик), Node.js (за бързо изпълнение )
 *   **Клиентска част (Frontend):** React (за уеб базиран интерфейс)
 *   **База данни (Database):** Amazon RDS (облачна релационна база данни подходяща за опростяване на администрирането и рутинни задачи), Redis (нерелационна база данни за бърза обработка на големи данни в реално време)
-=======
-**Backend** 
-- Framework: Spring Boot 3 
-- Език: Java 17+  
-- ORM: Spring Data JPA / Hibernate 
- 
-**Frontend**  
-- Framework: React 18 с JavaScript
->>>>>>> e14e1f3675b732c9f1a6070bab472e4ac6dea449:course-work/Implementations/ProjectDescription.md
 
 **Database**  
 - RDBMS: MS SQL
